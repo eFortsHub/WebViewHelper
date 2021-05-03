@@ -1,0 +1,3 @@
+include ':WebLibrary'
+include ':app'
+rootProject.name = "WebView Library"
