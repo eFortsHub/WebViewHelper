@@ -3,7 +3,9 @@ package com.efortshub.webview.library;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.webkit.WebView;
+
+import com.efortshub.webview.weblibrary.HbWebChromeClient;
+import com.efortshub.webview.weblibrary.WebView;
 
 public class MainActivity extends AppCompatActivity {
 
