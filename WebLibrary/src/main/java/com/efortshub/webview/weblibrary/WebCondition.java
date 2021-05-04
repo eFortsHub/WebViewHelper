@@ -28,9 +28,7 @@ public class WebCondition implements WebListener{
 
 
     public static WebCondition getInstance(@NonNull WebListener listener){
-
         webListener = listener;
-
 
         if (webCondition==null){
             webCondition = new WebCondition();
