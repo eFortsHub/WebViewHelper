@@ -37,23 +37,19 @@ Step 2. Add the dependency
 
 # Maven
 
-
 <repositories>
-		<repository>
-		    <id>jitpack.io</id>
-			
-		    <url>https://jitpack.io</url>
-			
-		</repository>
-	</repositories>
-	}
+<repository>
+<id>jitpack.io</id>
+<url>https://jitpack.io</url>
+</repository>
+</repositories>
+	
 	
 Step 2. Add the dependency
 
-
-	<dependency>
-	    <groupId>com.github.eFortsHub</groupId>
-	    <artifactId>WebViewHelper</artifactId>
-	    <version>1.0.2</version>
-	</dependency>
+<dependency>
+<groupId>com.github.eFortsHub</groupId>
+<artifactId>WebViewHelper</artifactId>
+<version>1.0.2</version>
+</dependency>
   }
