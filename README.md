@@ -35,9 +35,8 @@ Step 2. Add the dependency
 	
 
 
-Maven:
+# Maven
 
-{
 
 <repositories>
 		<repository>
@@ -50,7 +49,8 @@ Maven:
 	}
 	
 Step 2. Add the dependency
-{
+
+
 	<dependency>
 	    <groupId>com.github.eFortsHub</groupId>
 	    <artifactId>WebViewHelper</artifactId>
