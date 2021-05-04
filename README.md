@@ -66,20 +66,17 @@ in Java use:
                 @Override
                 public void onPageStarted(WebView webView, String url, Bitmap favicon) {
 
-                    Log.d(TAG, "onPageStarted: "+url);
 
                 }
 
                 @Override
                 public void onPageStopped(WebView webView, String url) {
-                    Log.d(TAG, "onPageStopped: ");
 
                 }
 
                 @Override
                 public void onProgressChanged(WebView webView, int progress) {
 
-                    Log.d(TAG, "onProgressChanged: "+progress);
 
                 }
 
@@ -89,7 +86,8 @@ in Java use:
 
                 @Override
                 public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-                    Log.d(TAG, "onReceivedSslError: ");
+		
+		
 
 
                 }
@@ -97,7 +95,6 @@ in Java use:
                 @Override
                 public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, WebChromeClient.FileChooserParams fileChooserParams) {
 
-                    Log.d(TAG, "onShowFileChooser: ");
 
                     webFilePathCallback = filePathCallback;
                     WebCondition.HandleonShowFileChooser(MainActivity.this, fileChooserParams);
@@ -109,7 +106,6 @@ in Java use:
 
                     permissionRequest = request;
 
-                    Log.d(TAG, "checkPermission: "+permissions.get(0));
                    boolean isAllGranted =  WebCondition.requestNewPermission(
 
                             MainActivity.this,
@@ -121,8 +117,6 @@ in Java use:
                         request.grant(request.getResources());
 
                     }
-
-                    Log.d(TAG, "checkPermission: "+isAllGranted);
 
                    return isAllGranted;
                 }
