@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebViewClient;
 
 import androidx.annotation.NonNull;
@@ -52,4 +53,5 @@ public class WebView extends android.webkit.WebView {
         setHbWebViewClient(webCondition.getHbWebViewClient());
         setHbWebChromeClient(webCondition.getHbWebChromeClient());
     }
+
 }
