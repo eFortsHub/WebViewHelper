@@ -3,21 +3,29 @@ package com.efortshub.webview.weblibrary;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.DownloadManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Build;
+import android.os.Environment;
 import android.util.Log;
+import android.view.View;
+import android.webkit.CookieManager;
+import android.webkit.DownloadListener;
 import android.webkit.PermissionRequest;
 import android.webkit.SslErrorHandler;
+import android.webkit.URLUtil;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebStorage;
 import android.webkit.WebView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -26,6 +34,8 @@ import androidx.core.content.ContextCompat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static android.content.Context.DOWNLOAD_SERVICE;
 
 public class WebCondition implements WebListener{
     public static int lastSyncedProgress =0;
@@ -90,6 +100,18 @@ public class WebCondition implements WebListener{
                 }).create().show();
 
 
+    }
+
+    public static void HandleonShowFileChooser(Activity activity, WebChromeClient.FileChooserParams fileChooserParams) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            String[] s =  fileChooserParams.getAcceptTypes();
+            for (String a: s){
+                Log.d("webloglf", "onShowFileChooser: s :"+a);
+            }
+            Intent intent = fileChooserParams.createIntent();
+           ActivityCompat.startActivityForResult(activity, intent, 32, null);
+        }
     }
 
     public HbWebViewClient getHbWebViewClient() {
@@ -265,17 +287,27 @@ public class WebCondition implements WebListener{
        w.setAllowFileAccessFromFileURLs(true);
        w.setAllowUniversalAccessFromFileURLs(true);
        w.setCacheMode(WebSettings.LOAD_DEFAULT);
+       w.setLoadsImagesAutomatically(true);
        w.setDatabaseEnabled(true);
        w.setSaveFormData(true);
-       w.setRenderPriority(WebSettings.RenderPriority.NORMAL);
+       w.setRenderPriority(WebSettings.RenderPriority.HIGH);
        w.setSupportZoom(true);
        w.setDisplayZoomControls(false);
-       w.setBuiltInZoomControls(true);
+       w.setBuiltInZoomControls(false);
        w.setDatabasePath(webView.getContext().getFilesDir().getPath());
        w.setLoadWithOverviewMode(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
             w.setMediaPlaybackRequiresUserGesture(false);
         }
+
+
+        if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.KITKAT){
+            webView.setLayerType(View.LAYER_TYPE_HARDWARE,null);
+        }else {
+            webView.setLayerType(View.LAYER_TYPE_SOFTWARE,null);
+        }
+
+
         w.setDomStorageEnabled(true);
         w.setJavaScriptCanOpenWindowsAutomatically(true);
         w.setAppCacheEnabled(true);
@@ -287,6 +319,27 @@ public class WebCondition implements WebListener{
         userAgent = "Mozilla/5.0 (Linux; Android 4.4.4; One Build/KTU84L.H4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.135 Mobile Safari/537.36";
 
         w.setUserAgentString(userAgent);
+
+
+
+
+        webView.setDownloadListener((s, s1, s2, s3, l) -> {
+            DownloadManager.Request request = new DownloadManager.Request(Uri.parse(s));
+            request.setMimeType(s3);
+            String cookies = CookieManager.getInstance().getCookie(s);
+            request.addRequestHeader("cookie",cookies);
+            request.addRequestHeader("User-Agent",s1);
+            request.setDescription("Downloading File...");
+            request.setTitle(URLUtil.guessFileName(s,s2,s3));
+            request.allowScanningByMediaScanner();
+            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS,URLUtil.guessFileName(s,s2,s3));
+            DownloadManager downloadManager =(DownloadManager) webView.getContext().getSystemService(DOWNLOAD_SERVICE);
+            downloadManager.enqueue(request);
+            Toast.makeText(webView.getContext(),"Downloading File",Toast.LENGTH_SHORT).show();
+        });
+
+
 
 
     }

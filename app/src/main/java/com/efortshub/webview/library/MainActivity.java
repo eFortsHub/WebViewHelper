@@ -92,15 +92,7 @@ public class MainActivity extends AppCompatActivity {
                     Log.d(TAG, "onShowFileChooser: ");
 
                     webFilePathCallback = filePathCallback;
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                       String[] s =  fileChooserParams.getAcceptTypes();
-                       for (String a: s){
-                           Log.d(TAG, "onShowFileChooser: s :"+a);
-                       }
-                       Intent intent = fileChooserParams.createIntent();
-                       startActivityForResult(intent, 32);
-                    }
+                    WebCondition.HandleonShowFileChooser(MainActivity.this, fileChooserParams);
                     return true;
                 }
 
