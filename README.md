@@ -52,4 +52,4 @@ Step 2. Add the dependency
 <artifactId>WebViewHelper</artifactId>
 <version>1.0.2</version>
 </dependency>
-  }
+  
