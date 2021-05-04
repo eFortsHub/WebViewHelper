@@ -53,6 +53,17 @@ Step 2. Add the dependency
 
 in Java use:
 
+
+all variable inside your Activity class:
+	
+    private PermissionRequest permissionRequest;
+    private ValueCallback<Uri[]> webFilePathCallback;
+    
+   
+  
+  
+Add these code in onCreate() method inside your activity class:
+
 	
 	com.efortshub.webview.weblibrary.WebView webview = findViewById(R.id.wv);
 	
@@ -147,5 +158,41 @@ in Java use:
 	webview.setWebCondition(webCondition);
 	
 	
- 
+ Override these two method in your activity
+ 	
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode== WebCondition.PERMISSION_CODE){
+            List<String> notGrantedPermissions = WebCondition.getNotGrantedPermissions(permissions, grantResults);
+
+            if (!notGrantedPermissions.isEmpty()){
+             WebCondition.showPermissionNotGrantedDialog(MainActivity.this,MainActivity.this,  notGrantedPermissions);
+            }
+
+            if (permissionRequest!=null){
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    permissionRequest.grant(permissionRequest.getResources());
+                }
+            }
+
+        }
+
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
+        if (requestCode == 32 && resultCode==RESULT_OK) {
+            Log.d(TAG, "onActivityResult: reuslt got : "+data.getData());
+
+            if (webFilePathCallback!=null){
+                webFilePathCallback.onReceiveValue(new Uri[]{data.getData()});
+            }
+
+            webFilePathCallback = null;
+
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
