@@ -119,8 +119,8 @@ Add these code in onCreate() method inside your activity class:
 
                    boolean isAllGranted =  WebCondition.requestNewPermission(
 
-                            MainActivity.this,
-                            MainActivity.this,
+                            context,
+                            activity,
                                     permissions);
 
                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -135,7 +135,7 @@ Add these code in onCreate() method inside your activity class:
                 @Override
                 public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
 
-                    Toast.makeText(MainActivity.this, description, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), description, Toast.LENGTH_SHORT).show();
 
                 }
 
@@ -166,7 +166,7 @@ Add these code in onCreate() method inside your activity class:
             List<String> notGrantedPermissions = WebCondition.getNotGrantedPermissions(permissions, grantResults);
 
             if (!notGrantedPermissions.isEmpty()){
-             WebCondition.showPermissionNotGrantedDialog(MainActivity.this,MainActivity.this,  notGrantedPermissions);
+             WebCondition.showPermissionNotGrantedDialog(context , activity,  notGrantedPermissions);
             }
 
             if (permissionRequest!=null){
