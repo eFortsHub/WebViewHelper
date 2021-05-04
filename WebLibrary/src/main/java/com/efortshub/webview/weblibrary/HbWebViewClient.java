@@ -2,6 +2,7 @@ package com.efortshub.webview.weblibrary;
 
 import android.graphics.Bitmap;
 import android.net.http.SslError;
+import android.os.Build;
 import android.os.Message;
 import android.security.KeyChain;
 import android.security.KeyChainAliasCallback;
@@ -15,6 +16,7 @@ import android.webkit.SslErrorHandler;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
+import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import androidx.annotation.Nullable;
@@ -29,12 +31,13 @@ public class HbWebViewClient extends WebViewClient {
 
     @Override
     public boolean shouldOverrideUrlLoading(android.webkit.WebView view, String url) {
-        return super.shouldOverrideUrlLoading(view, url);
+        view.loadUrl(url);
+        return true;
     }
 
     @Override
     public boolean shouldOverrideUrlLoading(android.webkit.WebView view, WebResourceRequest request) {
-        return super.shouldOverrideUrlLoading(view, request);
+        return false;
     }
 
     @Override
@@ -76,12 +79,16 @@ public class HbWebViewClient extends WebViewClient {
 
     @Override
     public void onReceivedError(android.webkit.WebView view, int errorCode, String description, String failingUrl) {
-        super.onReceivedError(view, errorCode, description, failingUrl);
+        webCondition.onReceivedError(view, errorCode, description, failingUrl);
     }
 
     @Override
-    public void onReceivedError(android.webkit.WebView view, WebResourceRequest request, WebResourceError error) {
-        super.onReceivedError(view, request, error);
+    public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            webCondition.onReceivedError(view, error.getErrorCode(), error.getDescription().toString(), request.getUrl().toString() );
+        }else {
+            webCondition.onReceivedError(view, 404, "Err: Could not load url", view.getUrl());
+        }
     }
 
     @Override

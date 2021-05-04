@@ -19,4 +19,8 @@ public interface WebListener {
     void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error);
 
     boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, WebChromeClient.FileChooserParams fileChooserParams);
+
+    void checkPermission(String... permissions);
+
+    void onReceivedError(WebView view, int errorCode, String description, String failingUrl);
 }

@@ -1,5 +1,11 @@
 package com.efortshub.webview.weblibrary;
 
+import android.Manifest;
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.net.http.SslError;
@@ -12,6 +18,11 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class WebCondition implements WebListener{
     public static int lastSyncedProgress =0;
@@ -19,6 +30,56 @@ public class WebCondition implements WebListener{
     private static HbWebViewClient hbWebViewClient;
     private static HbWebChromeClient hbWebChromeClient;
     private static WebListener webListener;
+    private static final String PERMISSION_AUDIO = "android.webkit.resource.AUDIO_CAPTURE";
+    public static final int PERMISSION_CODE = 1129238;
+
+    public static void requestNewPermission(Context context, Activity activity, String[] permissions) {
+
+        List<String> notGrantedPermissions = new ArrayList<>();
+
+        for (String p: permissions){
+            if (ContextCompat.checkSelfPermission(context, p) != PackageManager.PERMISSION_GRANTED){
+                notGrantedPermissions.add(p);
+            }
+        }
+
+        if (!notGrantedPermissions.isEmpty()){
+            ActivityCompat.requestPermissions(activity, (String[]) notGrantedPermissions.toArray(), PERMISSION_CODE);
+        }
+    }
+
+    public static List<String> getNotGrantedPermissions(String[] permissions, int[] grantResults) {
+        List<String> list = new ArrayList<>();
+
+        for (int i=0; i<permissions.length; i++){
+            try{
+                if (grantResults[i] != PackageManager.PERMISSION_GRANTED){
+
+                    list.add(permissions[i]);
+
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+        }
+
+
+
+        return list;
+    }
+
+    public static void showPermissionNotGrantedDialog(@NonNull Context context, @NonNull Activity activity,@NonNull  List<String> notGrantedPermissions) {
+        new AlertDialog.Builder(context)
+                .setTitle("Permission Required !")
+                .setMessage(notGrantedPermissions.size()+" permission need to be granted")
+                .setPositiveButton("Grant", (dialog, which) -> requestNewPermission(context, activity, (String[]) notGrantedPermissions.toArray()))
+                .setNegativeButton("Cancel", (dialog, which) -> {
+                    dialog.dismiss();
+                }).create().show();
+
+
+    }
 
     public HbWebViewClient getHbWebViewClient() {
         return hbWebViewClient;
@@ -65,13 +126,28 @@ public class WebCondition implements WebListener{
     public void onProgressChanged(android.webkit.WebView webView, int progress) {
         lastSyncedProgress = progress;
 
+        webListener.onProgressChanged(webView, progress);
+
     }
 
     @Override
     public void onPermissionRequest(PermissionRequest permissionRequest) {
         PermissionRequest request = permissionRequest;
 
-        webListener.onPermissionRequest(permissionRequest);
+        List<String> requiredPermissions = new ArrayList<>();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            for (String s: request.getResources()){
+                if (s.equals(PERMISSION_AUDIO)){
+                    requiredPermissions.add(Manifest.permission.RECORD_AUDIO);
+                    requiredPermissions.add(Manifest.permission.MODIFY_AUDIO_SETTINGS);
+                }
+            }
+
+            webListener.checkPermission((String[]) requiredPermissions.toArray());
+        }
+
+        //webListener.onPermissionRequest(permissionRequest);
 
 
     }
@@ -84,6 +160,16 @@ public class WebCondition implements WebListener{
     @Override
     public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, WebChromeClient.FileChooserParams fileChooserParams) {
         return webListener.onShowFileChooser(webView, filePathCallback, fileChooserParams);
+    }
+
+    @Override
+    public void checkPermission(String... permissions) {
+        webListener.checkPermission(permissions);
+    }
+
+    @Override
+    public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+        webListener.onReceivedError(view, errorCode, description, failingUrl);
     }
 
 
