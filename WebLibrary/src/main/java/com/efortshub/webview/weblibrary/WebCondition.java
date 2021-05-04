@@ -4,7 +4,6 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -31,9 +30,9 @@ public class WebCondition implements WebListener{
     private static HbWebChromeClient hbWebChromeClient;
     private static WebListener webListener;
     private static final String PERMISSION_AUDIO = "android.webkit.resource.AUDIO_CAPTURE";
-    public static final int PERMISSION_CODE = 1129238;
+    public static final int PERMISSION_CODE = 1076;
 
-    public static void requestNewPermission(Context context, Activity activity, String[] permissions) {
+    public static boolean requestNewPermission(Context context, Activity activity, List<String> permissions) {
 
         List<String> notGrantedPermissions = new ArrayList<>();
 
@@ -44,8 +43,11 @@ public class WebCondition implements WebListener{
         }
 
         if (!notGrantedPermissions.isEmpty()){
-            ActivityCompat.requestPermissions(activity, (String[]) notGrantedPermissions.toArray(), PERMISSION_CODE);
-        }
+            ActivityCompat.requestPermissions(activity,notGrantedPermissions.toArray(new String[0]), PERMISSION_CODE);
+
+            return false;
+
+        }else return true;
     }
 
     public static List<String> getNotGrantedPermissions(String[] permissions, int[] grantResults) {
@@ -73,7 +75,7 @@ public class WebCondition implements WebListener{
         new AlertDialog.Builder(context)
                 .setTitle("Permission Required !")
                 .setMessage(notGrantedPermissions.size()+" permission need to be granted")
-                .setPositiveButton("Grant", (dialog, which) -> requestNewPermission(context, activity, (String[]) notGrantedPermissions.toArray()))
+                .setPositiveButton("Grant", (dialog, which) -> requestNewPermission(context, activity,  notGrantedPermissions))
                 .setNegativeButton("Cancel", (dialog, which) -> {
                     dialog.dismiss();
                 }).create().show();
@@ -143,12 +145,21 @@ public class WebCondition implements WebListener{
                     requiredPermissions.add(Manifest.permission.MODIFY_AUDIO_SETTINGS);
                 }
             }
+           /* String[] r = new String[requiredPermissions.size()];
+            for (int i=0; i<requiredPermissions.size(); i++){
+                r[i] = requiredPermissions.get(i);
 
-            webListener.checkPermission((String[]) requiredPermissions.toArray());
+            }
+*/
+            boolean isGranted = webListener.checkPermission(requiredPermissions);
+
+
         }
 
         //webListener.onPermissionRequest(permissionRequest);
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            request.grant(request.getResources());
+        }
 
     }
 
@@ -163,8 +174,8 @@ public class WebCondition implements WebListener{
     }
 
     @Override
-    public void checkPermission(String... permissions) {
-        webListener.checkPermission(permissions);
+    public boolean checkPermission(List<String> permissions) {
+        return webListener.checkPermission(permissions);
     }
 
     @Override

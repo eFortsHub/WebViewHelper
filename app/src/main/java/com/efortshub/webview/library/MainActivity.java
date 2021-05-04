@@ -1,6 +1,6 @@
 package com.efortshub.webview.library;
 
-import android.content.pm.PackageManager;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.net.http.SslError;
@@ -13,11 +13,10 @@ import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
-import androidx.annotation.LongDef;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.efortshub.webview.library.databinding.ActivityMainBinding;
 import com.efortshub.webview.weblibrary.WebCondition;
@@ -40,7 +39,8 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        binding.wv.loadUrl("http://google.com");
+     //   binding.wv.loadUrl("http://google.com");
+        binding.wv.loadUrl("https://image.online-convert.com/convert-to-jpg");
 
 
     }
@@ -108,13 +108,22 @@ public class MainActivity extends AppCompatActivity {
                 public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, WebChromeClient.FileChooserParams fileChooserParams) {
 
                     Log.d(TAG, "onShowFileChooser: ");
-                    return false;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                       String[] s =  fileChooserParams.getAcceptTypes();
+                       for (String a: s){
+                           Log.d(TAG, "onShowFileChooser: s :"+a);
+                       }
+                       Intent intent = fileChooserParams.createIntent();
+                       startActivityForResult(intent, 32);
+                    }
+                    return true;
                 }
 
                 @Override
-                public void checkPermission(String... permissions) {
+                public boolean checkPermission(List<String> permissions) {
 
-                    WebCondition.requestNewPermission(
+                    Log.d(TAG, "checkPermission: "+permissions.get(0));
+                   return WebCondition.requestNewPermission(
 
                             MainActivity.this,
                             MainActivity.this,
@@ -149,5 +158,18 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }
+
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+
+        if (requestCode == 32) {
+
+            Log.d(TAG, "onActivityResult: reuslt got : "+data.getData());
+
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

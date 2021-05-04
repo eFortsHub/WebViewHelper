@@ -160,4 +160,5 @@ public class HbWebChromeClient extends WebChromeClient {
     public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, FileChooserParams fileChooserParams) {
       return  webCondition.onShowFileChooser(webView, filePathCallback, fileChooserParams);
     }
+
 }

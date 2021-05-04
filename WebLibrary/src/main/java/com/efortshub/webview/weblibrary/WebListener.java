@@ -9,6 +9,8 @@ import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
+import java.util.List;
+
 public interface WebListener {
 
     void onPageStarted(WebView webView, String url, Bitmap favicon);
@@ -20,7 +22,7 @@ public interface WebListener {
 
     boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, WebChromeClient.FileChooserParams fileChooserParams);
 
-    void checkPermission(String... permissions);
+    boolean checkPermission(List<String> permissions);
 
     void onReceivedError(WebView view, int errorCode, String description, String failingUrl);
 }
