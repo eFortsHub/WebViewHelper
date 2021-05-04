@@ -30,16 +30,26 @@ public class WebView extends android.webkit.WebView {
     }
 
 
-    @Override
-    public void setWebChromeClient(@Nullable WebChromeClient client) {
+    public void setHbWebChromeClient(@Nullable WebChromeClient client) {
         super.setWebChromeClient(client);
     }
 
-    @Override
-    public void setWebViewClient(@NonNull WebViewClient client) {
+    public void setHbWebViewClient(@NonNull WebViewClient client) {
         super.setWebViewClient(client);
 
     }
 
+    @Override
+    public void setWebViewClient(@NonNull WebViewClient client) {
+        setHbWebViewClient(client);
+    }
 
+    @Override
+    public void setWebChromeClient(@Nullable WebChromeClient client) {
+        setHbWebChromeClient(client);
+    }
+    public void setWebCondition(@NonNull WebCondition webCondition){
+        setHbWebViewClient(webCondition.getHbWebViewClient());
+        setHbWebChromeClient(webCondition.getHbWebChromeClient());
+    }
 }
