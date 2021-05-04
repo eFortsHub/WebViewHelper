@@ -44,8 +44,9 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        binding.wv.loadUrl("https://amarassistant.com");
+       // binding.wv.loadUrl("https://amarassistant.com");
        // binding.wv.loadUrl("http://google.com");
+        binding.wv.loadUrl("https://gamboll.in/?rId=6766&uType=guessr&uId=100&uName=Bappi");
        // binding.wv.loadUrl("https://image.online-convert.com/convert-to-jpg");
 
 
@@ -79,28 +80,6 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onPermissionRequest(PermissionRequest permissionRequest) {
-                /*    Log.d(TAG, "onPermissionRequest: ");
-                    Log.d(TAG, "onPermissionRequest: "+permissionRequest);
-                    Log.d(TAG, "onPermissionRequest.toString : "+permissionRequest.toString());
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        Log.d(TAG, "origin: "+permissionRequest.getOrigin());
-                        Log.d(TAG, "path: "+permissionRequest.getOrigin().getPath());
-                        Log.d(TAG, "query: "+permissionRequest.getOrigin().getQuery());
-                        Log.d(TAG, "host: "+permissionRequest.getOrigin().getHost());
-                        Log.d(TAG, "authority: "+permissionRequest.getOrigin().getAuthority());
-                    }
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-
-                        for (String s: permissionRequest.getResources()){
-                            Log.d(TAG, "onPermissionRequest: resource :"+s);
-                        }
-
-                        Log.d(TAG, "onPermissionRequest: "+permissionRequest.getResources());
-                        Log.d(TAG, "onPermissionRequest: "+permissionRequest.getResources().toString());
-                    }
-*/
-
                 }
 
                 @Override

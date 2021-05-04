@@ -167,6 +167,33 @@ public class WebCondition implements WebListener{
 
     @Override
     public void onPermissionRequest(PermissionRequest permissionRequest) {
+
+
+
+
+                /*    Log.d(TAG, "onPermissionRequest: ");
+                    Log.d(TAG, "onPermissionRequest: "+permissionRequest);
+                    Log.d(TAG, "onPermissionRequest.toString : "+permissionRequest.toString());
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        Log.d(TAG, "origin: "+permissionRequest.getOrigin());
+                        Log.d(TAG, "path: "+permissionRequest.getOrigin().getPath());
+                        Log.d(TAG, "query: "+permissionRequest.getOrigin().getQuery());
+                        Log.d(TAG, "host: "+permissionRequest.getOrigin().getHost());
+                        Log.d(TAG, "authority: "+permissionRequest.getOrigin().getAuthority());
+                    }
+
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+                        for (String s: permissionRequest.getResources()){
+                            Log.d(TAG, "onPermissionRequest: resource :"+s);
+                        }
+
+                        Log.d(TAG, "onPermissionRequest: "+permissionRequest.getResources());
+                        Log.d(TAG, "onPermissionRequest: "+permissionRequest.getResources().toString());
+                    }
+*/
+
+
         PermissionRequest request = permissionRequest;
 
         List<String> requiredPermissions = new ArrayList<>();
