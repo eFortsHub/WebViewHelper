@@ -10,7 +10,7 @@ https://facebook.com/h.bappi.hp
 
 
 
-[![](https://jitpack.io/v/eFortsHub/WebViewHelper.svg)](https://jitpack.io/#eFortsHub/WebViewHelper)
+Current version available in jitpack: [![](https://jitpack.io/v/eFortsHub/WebViewHelper.svg)](https://jitpack.io/#eFortsHub/WebViewHelper)
 
 
 
