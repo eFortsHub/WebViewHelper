@@ -15,7 +15,6 @@ import android.webkit.WebView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.efortshub.webview.library.databinding.ActivityMainBinding;
@@ -39,8 +38,8 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-     //   binding.wv.loadUrl("http://google.com");
-        binding.wv.loadUrl("https://image.online-convert.com/convert-to-jpg");
+        binding.wv.loadUrl("http://google.com");
+       // binding.wv.loadUrl("https://image.online-convert.com/convert-to-jpg");
 
 
     }
@@ -120,15 +119,24 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public boolean checkPermission(List<String> permissions) {
+                public boolean checkPermission(PermissionRequest request, List<String> permissions) {
 
                     Log.d(TAG, "checkPermission: "+permissions.get(0));
-                   return WebCondition.requestNewPermission(
+                   boolean isAllGranted =  WebCondition.requestNewPermission(
 
                             MainActivity.this,
                             MainActivity.this,
                                     permissions);
 
+                   if (isAllGranted){
+                       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+                           runOnUiThread(()-> request.grant(request.getResources()));
+
+                       }
+                   }
+
+                   return isAllGranted;
                 }
 
                 @Override

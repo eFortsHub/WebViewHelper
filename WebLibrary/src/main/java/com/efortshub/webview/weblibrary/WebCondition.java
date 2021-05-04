@@ -42,8 +42,13 @@ public class WebCondition implements WebListener{
             }
         }
 
+        String[] arr = new String[notGrantedPermissions.size()];
+        for (int i=0; i<notGrantedPermissions.size(); i++){
+            arr[i] = notGrantedPermissions.get(i);
+        }
+
         if (!notGrantedPermissions.isEmpty()){
-            ActivityCompat.requestPermissions(activity,notGrantedPermissions.toArray(new String[0]), PERMISSION_CODE);
+            ActivityCompat.requestPermissions(activity,arr, PERMISSION_CODE);
 
             return false;
 
@@ -151,16 +156,16 @@ public class WebCondition implements WebListener{
 
             }
 */
-            boolean isGranted = webListener.checkPermission(requiredPermissions);
+            boolean isGranted = webListener.checkPermission(request, requiredPermissions);
 
 
         }
 
         //webListener.onPermissionRequest(permissionRequest);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+       /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             request.grant(request.getResources());
         }
-
+*/
     }
 
     @Override
@@ -174,8 +179,8 @@ public class WebCondition implements WebListener{
     }
 
     @Override
-    public boolean checkPermission(List<String> permissions) {
-        return webListener.checkPermission(permissions);
+    public boolean checkPermission(PermissionRequest request, List<String> permissions) {
+        return webListener.checkPermission(request, permissions);
     }
 
     @Override

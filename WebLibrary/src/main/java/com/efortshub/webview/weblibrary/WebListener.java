@@ -22,7 +22,7 @@ public interface WebListener {
 
     boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, WebChromeClient.FileChooserParams fileChooserParams);
 
-    boolean checkPermission(List<String> permissions);
+    boolean checkPermission(PermissionRequest request, List<String> permissions);
 
     void onReceivedError(WebView view, int errorCode, String description, String failingUrl);
 }
