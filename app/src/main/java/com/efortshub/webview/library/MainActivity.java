@@ -44,10 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-       // binding.wv.loadUrl("https://amarassistant.com");
-       // binding.wv.loadUrl("http://google.com");
-        binding.wv.loadUrl("https://gamboll.in/?rId=6766&uType=guessr&uId=100&uName=Bappi");
-       // binding.wv.loadUrl("https://image.online-convert.com/convert-to-jpg");
+        binding.wv.loadUrl("http://google.com");
 
 
     }
@@ -139,6 +136,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                    
 
                     return false;
                 }
