@@ -7,6 +7,7 @@ import android.webkit.PermissionRequest;
 import android.webkit.SslErrorHandler;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 
 import java.util.List;
@@ -25,4 +26,7 @@ public interface WebListener {
     boolean checkPermission(PermissionRequest request, List<String> permissions);
 
     void onReceivedError(WebView view, int errorCode, String description, String failingUrl);
+
+    boolean shouldOverrideUrlLoading(WebView view, String url);
+    boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request);
 }

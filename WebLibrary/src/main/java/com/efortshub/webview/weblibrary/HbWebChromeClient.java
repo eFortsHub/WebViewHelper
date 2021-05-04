@@ -2,7 +2,9 @@ package com.efortshub.webview.weblibrary;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.webkit.ConsoleMessage;
 import android.webkit.GeolocationPermissions;
@@ -121,6 +123,9 @@ public class HbWebChromeClient extends WebChromeClient {
 
     @Override
     public void onPermissionRequestCanceled(PermissionRequest request) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Log.d("weblogl", "onPermissionRequestCanceled: "+request.getResources()[0]);
+        }
         super.onPermissionRequestCanceled(request);
     }
 

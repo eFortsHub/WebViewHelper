@@ -6,6 +6,7 @@ import android.os.Build;
 import android.os.Message;
 import android.security.KeyChain;
 import android.security.KeyChainAliasCallback;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.ClientCertRequest;
@@ -31,13 +32,12 @@ public class HbWebViewClient extends WebViewClient {
 
     @Override
     public boolean shouldOverrideUrlLoading(android.webkit.WebView view, String url) {
-        view.loadUrl(url);
-        return true;
+        return webCondition.shouldOverrideUrlLoading(view, url);
     }
 
     @Override
     public boolean shouldOverrideUrlLoading(android.webkit.WebView view, WebResourceRequest request) {
-        return false;
+        return webCondition.shouldOverrideUrlLoading(view,request);
     }
 
     @Override
@@ -53,6 +53,7 @@ public class HbWebViewClient extends WebViewClient {
     @Override
     public void onLoadResource(android.webkit.WebView view, String url) {
         super.onLoadResource(view, url);
+        Log.d("weblogl", "onLoadResource: "+url);
     }
 
     @Override
@@ -64,12 +65,20 @@ public class HbWebViewClient extends WebViewClient {
     @Override
     public WebResourceResponse shouldInterceptRequest(android.webkit.WebView view, String url) {
         return super.shouldInterceptRequest(view, url);
+
     }
 
     @Nullable
     @Override
-    public WebResourceResponse shouldInterceptRequest(android.webkit.WebView view, WebResourceRequest request) {
+    public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Log.d("weblogl", "shouldInterceptRequest: "+request.getUrl());
+        }
+
         return super.shouldInterceptRequest(view, request);
+
+
     }
 
     @Override

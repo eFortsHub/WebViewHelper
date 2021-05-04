@@ -9,11 +9,14 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.net.http.SslError;
 import android.os.Build;
+import android.util.Log;
 import android.webkit.PermissionRequest;
 import android.webkit.SslErrorHandler;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
+import android.webkit.WebStorage;
 import android.webkit.WebView;
 
 import androidx.annotation.NonNull;
@@ -22,6 +25,7 @@ import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class WebCondition implements WebListener{
     public static int lastSyncedProgress =0;
@@ -96,6 +100,14 @@ public class WebCondition implements WebListener{
         return hbWebChromeClient;
     }
 
+    public void setHbWebViewClient(HbWebViewClient webViewClient) {
+        hbWebViewClient = webViewClient;
+    }
+
+    public void setHbWebChromeClient(HbWebChromeClient webChromeClient) {
+        hbWebChromeClient = webChromeClient;
+    }
+
 
     public static WebCondition getInstance(@NonNull WebListener listener){
         webListener = listener;
@@ -112,8 +124,24 @@ public class WebCondition implements WebListener{
 
 
 
+
         return webCondition;
     }
+
+    public static WebCondition getInstance(@NonNull WebListener listener, HbWebViewClient webViewClient, HbWebChromeClient webChromeClient){
+        webListener = listener;
+
+        if (webCondition==null){
+            webCondition = new WebCondition();
+        }
+
+        webCondition.hbWebViewClient = hbWebViewClient;
+        webCondition.hbWebChromeClient= hbWebChromeClient;
+
+
+        return webCondition;
+    }
+
 
     @Override
     public void onPageStarted(WebView webView, String url, Bitmap favicon) {
@@ -145,6 +173,7 @@ public class WebCondition implements WebListener{
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             for (String s: request.getResources()){
+                Log.d("webloglp", "onPermissionRequest: "+s);
                 if (s.equals(PERMISSION_AUDIO)){
                     requiredPermissions.add(Manifest.permission.RECORD_AUDIO);
                     requiredPermissions.add(Manifest.permission.MODIFY_AUDIO_SETTINGS);
@@ -156,7 +185,7 @@ public class WebCondition implements WebListener{
 
             }
 */
-            boolean isGranted = webListener.checkPermission(request, requiredPermissions);
+            webListener.checkPermission(request, requiredPermissions);
 
 
         }
@@ -188,6 +217,16 @@ public class WebCondition implements WebListener{
         webListener.onReceivedError(view, errorCode, description, failingUrl);
     }
 
+    @Override
+    public boolean shouldOverrideUrlLoading(WebView view, String url) {
+        return webListener.shouldOverrideUrlLoading(view, url);
+    }
+
+    @Override
+    public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+        return webListener.shouldOverrideUrlLoading(view, request);
+    }
+
 
     public static void applyWebSettings(com.efortshub.webview.weblibrary.WebView webView){
        WebSettings w =  webView.getSettings();
@@ -201,7 +240,7 @@ public class WebCondition implements WebListener{
        w.setCacheMode(WebSettings.LOAD_DEFAULT);
        w.setDatabaseEnabled(true);
        w.setSaveFormData(true);
-       w.setRenderPriority(WebSettings.RenderPriority.HIGH);
+       w.setRenderPriority(WebSettings.RenderPriority.NORMAL);
        w.setSupportZoom(true);
        w.setDisplayZoomControls(false);
        w.setBuiltInZoomControls(true);
@@ -212,6 +251,15 @@ public class WebCondition implements WebListener{
         }
         w.setDomStorageEnabled(true);
         w.setJavaScriptCanOpenWindowsAutomatically(true);
+        w.setAppCacheEnabled(true);
+
+
+        String userAgent = String.format("%s [%s/%s]", w.getUserAgentString(), "App Android", Build.VERSION.CODENAME);
+
+
+        userAgent = "Mozilla/5.0 (Linux; Android 4.4.4; One Build/KTU84L.H4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/36.0.1985.135 Mobile Safari/537.36";
+
+        w.setUserAgentString(userAgent);
 
 
     }
