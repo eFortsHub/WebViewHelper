@@ -36,3 +36,122 @@ Step 2. Add the dependency
 
 # Documentation
 
+
+ in XML use :
+ 
+ 
+    <com.efortshub.webview.weblibrary.WebView
+        android:id="@+id/wv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+
+in Java use:
+
+	
+	com.efortshub.webview.weblibrary.WebView webview = findViewById(R.id.wv);
+	
+	WebCondition.applyWebSettings(webview);
+	
+	
+	WebListener webListener;
+	
+        if (webListener==null) {
+            webListener = new WebListener() {
+                @Override
+                public void onPageStarted(WebView webView, String url, Bitmap favicon) {
+
+                    Log.d(TAG, "onPageStarted: "+url);
+
+                }
+
+                @Override
+                public void onPageStopped(WebView webView, String url) {
+                    Log.d(TAG, "onPageStopped: ");
+
+                }
+
+                @Override
+                public void onProgressChanged(WebView webView, int progress) {
+
+                    Log.d(TAG, "onProgressChanged: "+progress);
+
+                }
+
+                @Override
+                public void onPermissionRequest(PermissionRequest permissionRequest) {
+                }
+
+                @Override
+                public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+                    Log.d(TAG, "onReceivedSslError: ");
+
+
+                }
+
+                @Override
+                public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, WebChromeClient.FileChooserParams fileChooserParams) {
+
+                    Log.d(TAG, "onShowFileChooser: ");
+
+                    webFilePathCallback = filePathCallback;
+                    WebCondition.HandleonShowFileChooser(MainActivity.this, fileChooserParams);
+                    return true;
+                }
+
+                @Override
+                public boolean checkPermission(PermissionRequest request, List<String> permissions) {
+
+                    permissionRequest = request;
+
+                    Log.d(TAG, "checkPermission: "+permissions.get(0));
+                   boolean isAllGranted =  WebCondition.requestNewPermission(
+
+                            MainActivity.this,
+                            MainActivity.this,
+                                    permissions);
+
+                   if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+
+                        request.grant(request.getResources());
+
+                    }
+
+                    Log.d(TAG, "checkPermission: "+isAllGranted);
+
+                   return isAllGranted;
+                }
+
+                @Override
+                public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+
+                    Toast.makeText(MainActivity.this, description, Toast.LENGTH_SHORT).show();
+
+                }
+
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                    
+
+                    return false;
+                }
+
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+
+                    return false;
+                }
+            };
+
+        }
+        WebCondition webCondition = WebCondition.getInstance(webListener);
+	webview.setWebCondition(webCondition);
+	
+	
+ 
+
