@@ -108,12 +108,12 @@ public class HbWebChromeClient extends WebChromeClient {
 
     @Override
     public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
-        super.onGeolocationPermissionsShowPrompt(origin, callback);
+        webCondition.onGeolocationPermissionsShowPrompt(origin, callback);
     }
 
     @Override
     public void onGeolocationPermissionsHidePrompt() {
-        super.onGeolocationPermissionsHidePrompt();
+        webCondition.onGeolocationPermissionsHidePrompt();
     }
 
     @Override

@@ -16,6 +16,7 @@ import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.DownloadListener;
+import android.webkit.GeolocationPermissions;
 import android.webkit.PermissionRequest;
 import android.webkit.SslErrorHandler;
 import android.webkit.URLUtil;
@@ -43,7 +44,6 @@ public class WebCondition implements WebListener{
     private static HbWebViewClient hbWebViewClient;
     private static HbWebChromeClient hbWebChromeClient;
     private static WebListener webListener;
-    private static final String PERMISSION_AUDIO = "android.webkit.resource.AUDIO_CAPTURE";
     public static final int PERMISSION_CODE = 1076;
 
     public static boolean requestNewPermission(Context context, Activity activity, List<String> permissions) {
@@ -157,8 +157,8 @@ public class WebCondition implements WebListener{
             webCondition = new WebCondition();
         }
 
-        webCondition.hbWebViewClient = hbWebViewClient;
-        webCondition.hbWebChromeClient= hbWebChromeClient;
+        hbWebViewClient = webViewClient;
+        hbWebChromeClient= webChromeClient;
 
 
         return webCondition;
@@ -191,8 +191,6 @@ public class WebCondition implements WebListener{
     public void onPermissionRequest(PermissionRequest permissionRequest) {
 
 
-
-
                 /*    Log.d(TAG, "onPermissionRequest: ");
                     Log.d(TAG, "onPermissionRequest: "+permissionRequest);
                     Log.d(TAG, "onPermissionRequest.toString : "+permissionRequest.toString());
@@ -223,9 +221,19 @@ public class WebCondition implements WebListener{
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             for (String s: request.getResources()){
                 Log.d("webloglp", "onPermissionRequest: "+s);
-                if (s.equals(PERMISSION_AUDIO)){
+                if (s.equals(PermissionRequest.RESOURCE_AUDIO_CAPTURE)){
                     requiredPermissions.add(Manifest.permission.RECORD_AUDIO);
                     requiredPermissions.add(Manifest.permission.MODIFY_AUDIO_SETTINGS);
+
+                }else if(s.equals(PermissionRequest.RESOURCE_VIDEO_CAPTURE)){
+                    requiredPermissions.add(Manifest.permission.CAMERA);
+
+                }else if (s.equals(PermissionRequest.RESOURCE_MIDI_SYSEX)){
+
+
+                }else  if (s.equals(PermissionRequest.RESOURCE_PROTECTED_MEDIA_ID)){
+
+
                 }
             }
            /* String[] r = new String[requiredPermissions.size()];
@@ -245,6 +253,7 @@ public class WebCondition implements WebListener{
         }
 */
     }
+
 
     @Override
     public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
@@ -344,4 +353,15 @@ public class WebCondition implements WebListener{
 
     }
 
+    @Override
+    public void onGeolocationPermissionsHidePrompt() {
+
+
+    }
+
+    @Override
+    public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
+
+
+    }
 }
